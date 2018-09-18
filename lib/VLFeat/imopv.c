@@ -135,7 +135,7 @@ VL_XCAT(vl_imconvcol_v, SFX)
   if (vl_cpu_has_sse2() && vl_get_simd_enabled()) {
     VL_XCAT3(_vl_imconvcol_v,SFX,_sse2)
     (dst,dst_stride,
-     src,src_width,src_height,src_stride,
+     src,src_width,src_height,(signed)src_stride,
      filt,filt_begin,filt_end,
      step,flags) ;
     return ;
@@ -165,7 +165,7 @@ VL_XCAT(vl_imconvcol_v, SFX)
 
       filti = filt ;
       stop = filt_end - y ;
-      srci = src + x - stop * src_stride ;
+      srci = src + x - stop * (signed)src_stride ;
 
       if (stop > 0) {
         if (zeropad) {
@@ -176,7 +176,7 @@ VL_XCAT(vl_imconvcol_v, SFX)
         while (filti > filt - stop) {
           c = *filti-- ;
           acc += v * c ;
-          srci += src_stride ;
+          srci += (signed)src_stride ;
         }
       }
 
@@ -185,7 +185,7 @@ VL_XCAT(vl_imconvcol_v, SFX)
         v = *srci ;
         c = *filti-- ;
         acc += v * c ;
-        srci += src_stride ;
+        srci += (signed)src_stride ;
       }
 
       if (zeropad) v = 0 ;
